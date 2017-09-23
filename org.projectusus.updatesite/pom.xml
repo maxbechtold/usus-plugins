@@ -7,11 +7,16 @@
   <parent>
     <artifactId>projectusus</artifactId>
     <groupId>org.projectusus</groupId>
-    <version>0.7.8-SNAPSHOT</version>
+    <version>0.7.9-SNAPSHOT</version>
   </parent>
 
   <artifactId>org.projectusus.updatesite</artifactId>
   <packaging>eclipse-repository</packaging>
+  
+  <properties>
+	  <github.global.server>github</github.global.server>
+	  <maven.deploy.skip>true</maven.deploy.skip>
+  </properties>
 
   <build>
     <plugins>
@@ -30,15 +35,15 @@
 			<configuration>
 				<source>
 					<repository>
-						<url>http://projectusus.googlecode.com/svn/updates</url>
+						<url>http://www.projectusus.org/usus-plugins/updates</url>
 						<layout>p2</layout>
 					</repository>
 					<repository>
-						<url>http://usus.github.com/JFeet</url>
+						<url>http://www.projectusus.org/JFeet</url>
 						<layout>p2</layout>
 					</repository>
 					<repository>
-						<url>http://usus.github.com/swtchart</url>
+						<url>http://www.projectusus.org/swtchart</url>
 						<layout>p2</layout>
 					</repository>
 				</source>
@@ -82,6 +87,50 @@
 				<!-- whether to append to the target repo content -->
 				<append>true</append>
 			</configuration>
+		</plugin>
+		<plugin>
+			<groupId>com.github.github</groupId>
+			<artifactId>site-maven-plugin</artifactId>
+			<version>0.11</version>
+			<executions>
+				<execution>
+					<phase>deploy</phase>
+					<goals>
+						<goal>site</goal>
+					</goals>
+				</execution>
+			</executions>
+			<configuration>
+				<repositoryOwner>usus</repositoryOwner>
+				<repositoryName>usus-plugins</repositoryName>
+				<message>Release ${release.version}</message>
+				<merge>true</merge>
+				<outputDirectory>${project.build.directory}/repository</outputDirectory>
+				<path>updates</path>
+			</configuration>
+		</plugin>
+		<plugin>
+			<artifactId>maven-enforcer-plugin</artifactId>
+			<version>1.4</version>
+			<executions>
+				<execution>
+					<id>enforce-release-version</id>
+					<phase>deploy</phase>
+					<goals>
+						<goal>enforce</goal>
+					</goals>
+					<configuration>
+						<rules>
+							<requireProperty>
+								<property>release.version</property>
+								<message>Release version must be specified.</message>
+								<regex>^\d.*\d$</regex>
+								<regexMessage>Release version must begin and end in a number.</regexMessage>
+							</requireProperty>
+						</rules>
+					</configuration>
+				</execution>
+			</executions>
 		</plugin>
     </plugins>
   </build>
