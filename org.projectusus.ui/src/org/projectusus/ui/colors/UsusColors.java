@@ -75,6 +75,7 @@ public class UsusColors {
         return registry.get( symbolicName );
     }
 
+    // TODO maxbechtold This simpple mapping to 0-360 leads to too many collisions and thus hard to distinguish node colors
     int toHue( int value ) {
         long positive = ((long)value - Integer.MIN_VALUE) / 2;
         double y = (double)positive / Integer.MAX_VALUE;
