@@ -39,3 +39,5 @@ Export-Package: org.projectusus.ui.colors,
  org.projectusus.ui.preferences;x-internal:=true,
  org.projectusus.ui.util,
  org.projectusus.ui.viewer
+Bundle-ClassPath: lib/guava-21.0.jar,
+ .

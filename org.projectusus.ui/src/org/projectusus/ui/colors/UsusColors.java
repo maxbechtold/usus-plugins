@@ -6,12 +6,16 @@ package org.projectusus.ui.colors;
 
 import static java.lang.Math.max;
 
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+
+import maxbe.colors.DistinguishableHues;
 
 public class UsusColors {
 
@@ -63,6 +67,9 @@ public class UsusColors {
         return colorRegistry;
     }
 
+    // TODO #2 Create just enough hues and reuse them if more are required (never mind graphs with 50+ packages)
+    List<Integer> hues = new DistinguishableHues().withSparseRedGreenBlue().create( 50 ).collect( Collectors.toList() );
+
     public Color getNodeColorFor( int someIntValue ) {
         String symbolicName = "NODE_COLOR_" + someIntValue; //$NON-NLS-1$
         ColorRegistry registry = getColorRegistry();
@@ -75,11 +82,12 @@ public class UsusColors {
         return registry.get( symbolicName );
     }
 
-    // TODO maxbechtold This simpple mapping to 0-360 leads to too many collisions and thus hard to distinguish node colors
+    // TODO maxbechtold This simple mapping to 0-360 leads to too many collisions and thus hard to distinguish node colors
     int toHue( int value ) {
-        long positive = ((long)value - Integer.MIN_VALUE) / 2;
-        double y = (double)positive / Integer.MAX_VALUE;
-        return (int)Math.round( 360 * y );
+        Integer index = (int)(Math.random() * hues.size());
+        Integer hue = hues.get( index );
+        hues.remove( hue );
+        return hue;
     }
 
     public Color adjustSaturation( String colorKey, float newSaturation ) {
